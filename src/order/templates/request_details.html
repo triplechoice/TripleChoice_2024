@@ -1,0 +1,115 @@
+{% extends 'admin/base_site.html' %}
+{% load order_custom_template_tag %}
+{% load static %}
+{% block content %}
+    {% block content_subtitle %}{% endblock %}
+    {#    <link rel="stylesheet" href="{% static 'admin/css/custom/bootstrap.grid.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'admin/css/custom/bootstrap.others.css' %}">#}
+    <link href="{% static 'dist/css/app.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/css/chunk-vendors.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <strong>Request No : </strong> {{ order.order_id }}
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <ul class="list-group mt-2">
+                                    <li class="list-group-item bg-primary text-white">Request Info</li>
+                                    <li class="list-group-item"><span class="fw-bold">Quantity :</span> <span
+                                            class="">{{ order.quantity }}</span></li>
+                                    <li class="list-group-item"><span class="fw-bold">Type :</span> <span
+                                            class="">{{ order.get_type_display }}</span></li>
+                                    <li class="list-group-item"><span class="fw-bold">Ref request :</span> <span
+                                            class=""><a
+                                            href="/super-admin/order/request/{{ request.user|ref_object_id:order.ref_request }}/change/">{{ order.ref_request }}</a></span>
+                                    </li>
+                                    <li class="list-group-item"><span class="fw-bold">Comment :</span> <br>
+                                        <p class="">{{ order.comment }}</p>
+                                    </li>
+                                    <li class="list-group-item"><span class="fw-bold">Attachment :</span> <br>
+                                        <p class="">{{ order.image_comment }} <br></p>
+
+                                        {% if ".jpg" in order.image_comment.url or ".png" in order.image_comment.url or ".jpeg" in order.image_comment.url or ".gif" in order.image_comment.url %}
+                                        <img src="{{ order.image_comment.url }}"/>
+                                        
+                                        <a href="{{ order.image_comment.url }}" download="png" class="btn btn-sm text-secondary bg-light">
+                                            <i class="fa fa-download text-muted"></i>
+                                        </a>
+                                        {% elif order.image_comment %}
+                                        <a href="{{ order.image_comment.url }}" download="png" class="btn btn-sm btn-secondary bg-light">
+                                            <i class="fa fa-download text-muted"></i>
+                                        </a>
+                                        {% else %}
+                                        <p>No file found.</p>
+                                        {% endif %}
+
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-6">
+                                <ul class="list-group mt-2">
+                                    <li class="list-group-item bg-primary text-white">Contact Info</li>
+                                    <li class="list-group-item"><span class="fw-bold">Name :</span> <span
+                                            class="">{{ order.contact_info.name }}</span></li>
+                                    <li class="list-group-item"><span class="fw-bold">Email :</span> <span
+                                            class="">{{ order.contact_info.email }}</span></li>
+                                    <li class="list-group-item"><span class="fw-bold">Phone :</span> <span
+                                            class="">{{ order.contact_info.phone }}</span></li>
+                                    <li class="list-group-item"><span class="fw-bold">Company Name :</span> <span
+                                            class="">{{ order.contact_info.companyName }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-3">
+                    <div class="card-header bg-info text-white">
+                        Part Details : <strong
+                            class="text-white bg-danger bg-gradient badge "> {{ order.answer.title }} </strong>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            {% for partclassification_set in order.answer.partclassification_set %}
+                                <div class="col-md-6 col-xs-12 mt-2">
+                                    <div class="card">
+                                        <div class="card-header bg-primary text-white">
+                                            {{ partclassification_set.classification.title }}
+                                        </div>
+                                        <div class="card-body">
+                                            <ul class="list-group">
+                                                {% for partclassificationattribute_set in partclassification_set.partclassificationattribute_set %}
+                                                    <li class="list-group-item"><span
+                                                            class="fw-bold">{{ partclassificationattribute_set.attribute.title }} :</span>
+                                                        <span class="float-end">
+                                                            {{ partclassificationattribute_set.attribute.value }}
+                                                            {% if partclassificationattribute_set.attribute.unit_value %}
+                                                                {% for unit in partclassificationattribute_set.attribute.unit %}
+                                                                    {% if unit.id == partclassificationattribute_set.attribute.unit_value %}
+                                                                        <strong class="text-white bg-danger bg-gradient badge ">Unit: {{ unit.title }} </strong>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </span>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'dist/js/app.js' %}"></script>
+    <script src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+{% endblock %}

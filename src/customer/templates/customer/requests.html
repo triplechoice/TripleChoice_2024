@@ -1,0 +1,48 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+    <div id="app">
+        {% csrf_token %}
+        <dynamic-table url='/user/api/customer-request/' has-actions="true" table-name="Request List">
+
+            <template slot="actions" slot-scope="slotProps">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item btn btn-info" :href="`/user/request-details/${[[slotProps.row.order_id]]}`">
+                            Details
+                        </a></li>
+                        <li><a class="dropdown-item btn-success" :class="[[slotProps.row.status != 'Submitted' ? 'disabled' : '']]"
+                               :href="`/part/${[[slotProps.row.slug]]}/request/${[[slotProps.row.id]]}/update/`">Edit</a></li>
+                        <li><a class="dropdown-item btn-danger" :class="[[slotProps.row.status == 'Cancelled' ? 'disabled' : '']]"
+                               :href="`/request/delete/${[[slotProps.row.id]]}`"
+                               onclick='return confirm("Are you sure you want to do this?")'>Delete</a>
+                        </li>
+                        <li><a class="dropdown-item btn-secondary" :class="[[slotProps.row.status == 'Cancelled' ? 'disabled' : '']]" :href="`/user/request/${[[slotProps.row.id]]}/review`">Review list</a>
+                        </li>
+                        <li><a class="dropdown-item btn btn-warning" :href="`/user/requests-history/${[[slotProps.row.order_id]]}`"  :class="[[slotProps.row.status == 'Cancelled' ? 'disabled' : '']]">Request History</a></li>
+                        <li><a class="dropdown-item btn btn-danger" :class="[[slotProps.row.status == 'Cancelled' ? 'disabled' : '']]" :href="`/user/api/requests-cancel/${[[slotProps.row.id]]}`">Cancel</a></li>
+                    </ul>
+                </div>
+            </template>
+        </dynamic-table>
+
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                Toast.fire({
+                    title: '{{message}}',
+                    icon : 'success'
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+    <script type="text/javascript" src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+{#    <script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>#}
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+    {% block content_title %} {% endblock %}
+
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
+    <div id="app">
+        <part></part>
+    </div>
+    <script type="text/javascript" src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>
+{% endblock %}

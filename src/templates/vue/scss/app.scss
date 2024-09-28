@@ -1,0 +1,304 @@
+@import "node_modules/bootstrap/scss/bootstrap";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+
+//$primary: #79aec8;
+$primary      : #3497D3;
+$secondary    : #F2B538;
+
+$theme-colors : (
+        "primary": $primary,
+        "secondary": $secondary,
+        "success": $success,
+        "info": $info,
+        "warning": $warning,
+        "danger": $danger,
+        "light": $light,
+        "dark": $dark
+);
+@import "node_modules/startbootstrap-sb-admin-2/scss/sb-admin-2";
+
+@import "~vue-multiselect/dist/vue-multiselect.min.css";
+
+@import "abstracts/variables";
+@import "pages/home";
+body {
+   font-family : arial, sans-serif;
+   font-size   : 13px;
+   //font-family : 'Montserrat', sans-serif;
+}
+
+#header {
+   background : darken($primary, 25%);
+}
+
+.footer {
+   background : #f2f2f2;
+   min-height : 46px;
+   position   : absolute;
+   width      : 100%;
+   bottom     : 0;
+   left       : 0;
+
+   .menu-item {
+      a {
+         text-decoration : none;
+         color           : #70757a;
+
+         &:hover {
+            text-decoration : underline;
+         }
+      }
+   }
+
+   @include media-breakpoint-down(sm) {
+      min-height : 100px;
+   }
+
+}
+
+.tab-body {
+   .card-header {
+      height  : 65px;
+      display : flex;
+
+      .header-text {
+         margin : auto 0;
+      }
+   }
+}
+
+.container-fluid {
+
+   .wizard-bar {
+      height     : 5px;
+      position   : absolute;
+      width      : 100%;
+      background : $primary;
+      z-index    : 1;
+      bottom     : -3px;
+      left       : 0;
+   }
+}
+
+.tab-list {
+   max-width : 420px;
+   margin    : 0 auto 40px;
+   @include media-breakpoint-down(sm) {
+      .tab-title {
+         font-size : 10px;
+      }
+   }
+
+   .tab {
+      width    : 33.34%;
+      position : relative;
+
+      &:after {
+         position   : absolute;
+         content    : "";
+         width      : 100%;
+         border-top : 10px solid #C4C4C4;
+         left       : 48px;
+         top        : 20px;
+         z-index    : -1;
+         @include media-breakpoint-down(sm) {
+            border-top : 8px solid #C4C4C4;
+            top        : 16px;
+         }
+
+
+      }
+
+      &:last-child {
+         &:after {
+            content : none;
+         }
+      }
+   }
+
+   .done {
+      .circle-box {
+         background : $secondary
+      }
+   }
+
+   .activeCheck {
+      .circle-box {
+         background : $primary;
+      }
+
+      &:after {
+         border-top : 10px solid $primary;
+      }
+   }
+
+   .circle-box {
+      background    : #979797;
+      width         : 48px;
+      height        : 48px;
+      border-radius : 50%;
+      color         : #fff;
+      font-weight   : 600;
+      @include media-breakpoint-down(sm) {
+         width     : 38px;
+         height    : 38px;
+         font-size : 14px;
+      }
+   }
+
+   /*position : absolute;
+   width    : 100%;
+   bottom   : -14px;
+   z-index  : 2;
+
+   .tabs {
+      display         : flex;
+      justify-content : space-around;
+
+      .tab {
+         background      : $primary;
+         border          : 9px solid $primary;
+         border-radius   : 50%;
+         width           : 30px;
+         height          : 30px;
+         display         : flex;
+         justify-content : center;
+         cursor          : pointer;
+
+         .tab-title {
+            margin-top  : 25px;
+            white-space : nowrap;
+         }
+
+         &.done {
+            background  : $secondary;
+            font-weight : bold;
+            cursor      : default;
+
+            svg {
+               color : $primary !important;
+            }
+         }
+
+         &.active {
+            background : lighten($bg-wizard, 50);
+            color      : #fff;
+            cursor     : default;
+         }
+      }
+   }*/
+
+
+}
+
+.tab-body {
+   margin : 68px 0 48px;
+
+   .card {
+      border-radius : 10px;
+
+      .card-header {
+         border-radius : 10px 10px 0 0;
+      }
+
+      .card-body {
+
+         .scroll {
+            position : relative;
+            height   : calc(100vh - 206px - 48px - 34px - 48px - 38px - 80px);
+            overflow : hidden auto;
+         }
+      }
+
+      .card-footer {
+         border-radius : 0 0 10px 10px;
+      }
+   }
+
+   #serverRequirements {
+   }
+}
+
+.card-footer {
+   border-top : 1px solid #eee !important;
+}
+
+.w-10 {
+   width : 10%;
+   @include media-breakpoint-down(sm) {
+      width : auto;
+   }
+}
+
+.logo-height{
+   width:350px;
+   margin: 0 auto;
+}
+.logo-350{
+   width:210px;
+}
+
+@include media-breakpoint-down(sm) {
+   .card-body {
+      padding : .5rem;
+   }
+   .custom-select-arrow {
+      .form-select {
+         padding             : 0 10px;
+         background-position : right 0 center;
+      }
+   }
+   .logo-height{
+       width:210px;
+    }
+
+}
+
+a.text-light:hover, a.text-light:focus {
+   background : $secondary !important;
+   color      : #fff !important;
+}
+
+.btn-primary:hover {
+   color            : #fff;
+   background-color : $secondary;
+   border-color     : $secondary;
+}
+
+.btn-primary:focus, .btn-primary.focus {
+   background-color : $secondary;
+   border-color     : $secondary;
+   box-shadow       : 0 0 0 0.25rem $secondary;
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active, .show > .btn-primary.dropdown-toggle {
+   background-color : $secondary;
+   border-color     : $secondary;
+}
+
+.nav-link {
+   color : #000;
+}
+
+.custom-btn {
+   margin-left : 15px;
+   padding     : 5px 15px !important;
+
+   &:hover {
+      text-decoration : none !important;
+   }
+}
+
+.btn-primary:focus, .btn-primary.focus {
+   background-color : #267bae;
+   border-color     : #267bae;
+   box-shadow       : none !important;
+}
+
+
+@media screen and (max-height : 800px) {
+   .custom-height-body{
+      height : auto !important;
+      margin-top: 10%;
+   }
+}

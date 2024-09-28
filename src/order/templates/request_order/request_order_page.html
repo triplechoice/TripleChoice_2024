@@ -1,0 +1,15 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div>
+            <div><a href="{% url 'customer:customer_requests' %}" class="btn btn-primary text-white mt-2">Back</a></div>
+            <div><label class="display-6">Cart</label></div>
+            <div id="app">
+                <request-order request_id="{{ request_id }}" review_id="{{ review_id }}"></request-order>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}

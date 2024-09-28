@@ -1,0 +1,10 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+    {% csrf_token %}
+    <div id="app">
+        <checkout request_id="{{ request_id }}" quantity="{{ quantity }}" user_id="{{ user_id }}"
+                  review_id="{{ review_id }}" stripe_pk="{{ stripe_pk }}"></checkout>
+    </div>
+
+{% endblock %}

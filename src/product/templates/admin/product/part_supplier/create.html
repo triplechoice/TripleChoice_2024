@@ -1,0 +1,33 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+    {% block content_title %} {% endblock %}
+
+    {% csrf_token %}
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
+    <h5>Add part supplier</h5>
+    <div class="d-flex justify-content-end m-1">
+        {% if change %}
+            <form method="post" action="{% url 'product:delete.part.supplier' object_id %}">{% csrf_token %}
+                <button
+                        type="submit" class="btn btn-danger">Delete
+                </button>
+            </form>
+        {% endif %}
+    </div>
+    <form method="post" action="{% url 'product:add.part.supplier' %}">
+        {% csrf_token %}
+        {% if change %}
+            <input hidden name="update" value="{{ change }}">
+        {% endif %}
+        {{ form.part }}
+        {{ form.supplier }}
+        <input class="mt-1" type="submit" value="Save">
+    </form>
+    <script type="text/javascript" src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>
+{% endblock %}

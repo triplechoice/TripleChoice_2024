@@ -1,0 +1,52 @@
+// Color
+$color-black               : #000;
+$color-dark-black          : #1C1C1E;
+$color-medium-dark-black   : #2C2C2E;
+$color-light-black         : #3A3A3C;
+$color-dark-gray           : #48484A;
+$color-light-gray          : #636366;
+$color-lighter-black       : #8E8E93;
+$color-darker-light        : #AEAEB2;
+$color-less-lighter        : #D1D1D6;
+$color-light               : #F2F2F7;
+$color-white               : #fff;
+$color-blue                : #007AE1;
+$color-light-green         : #34C759;
+$color-indigo              : #5856D6;
+$color-orange              : #FF9500;
+$color-pink                : #FF2D55;
+$color-purple              : #AF52DE;
+$color-red                 : #FF3B30;
+$color-teal                : #5AC8FA;
+$color-yellow              : #FFCC00;
+
+//$bg-wizard: #00A89DFF;
+$bg-wizard                 : #198754;
+
+$color-sidebar-line        : #C4C4C4;
+$color-dropdown-box-shadow : rgba(28, 28, 30, 0.25);
+
+// figma color
+$main-color                : #3497D3;
+$second-color              : #F2B538;
+.text-main {
+   color : $main-color;
+}
+
+.text-second {
+   color : $second-color
+}
+
+.fw-600 {
+   font-weight : 600;
+}
+
+.nowrap {
+   white-space : nowrap;
+}
+
+.fs-12 {
+   @include media-breakpoint-down(sm) {
+      font-size : 12px;
+   }
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    {% block meta_value %}
+        <meta http-equiv="X-UA-Compatible" content="Triple Choice">
+    {% endblock %}
+    {% block title %}
+        <title>{{ site.title }}</title>
+        <link rel="icon" href="{% static '/assets/fav.png' %}" type="image/x-icon"/>
+
+        <!--    <link ref="logo" href="{% static '/assets/logo-new.png' %}">-->
+    {% endblock %}
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'dist/css/chunk-vendors.css' %}">
+    {% block headers %}
+    {% endblock %}
+
+</head>
+<body>
+<div class="">
+    {% include 'frontend/include/header.html' %}
+
+    <div class="container" id="main-body">
+        <div class="row">
+            {% block content %}
+            {% endblock %}
+        </div>
+        {% include 'frontend/include/footer.html' %}
+    </div>
+</div>
+
+
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    // const mainBody     = document.querySelector('#main-body');
+    const bodyHeight = document.querySelector('.custom-height-body');
+    const header = document.querySelector('.main-header');
+    const footer = document.querySelector('.footer');
+    const headerHeight = header.clientHeight;
+    const footerHeight = footer.clientHeight;
+    const total = (headerHeight + footerHeight) + 'px';
+    // mainBody.style.setProperty('min-height', `calc(100vh - ${total})`);
+    const w = window.innerWidth;
+    if (w > 767) {
+        bodyHeight.style.setProperty('height', `calc(100vh - ${total})`);
+    }
+</script>
+
+</body>
+</html>

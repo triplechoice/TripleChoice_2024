@@ -1,0 +1,55 @@
+{% extends 'dashboard/base.html' %}
+{% load review_checker %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+
+    <div id="app">
+        {% csrf_token %}
+        <dynamic-table url='/user/api/customer-request-review?request_id={{ request_id }}' has-actions="true"
+                       has-param="true" has-review="true" has-order="true" request-id="{{ request_id }}"
+                       table-name="Review list">
+            <template slot="actions" slot-scope="slotProps">
+                <span v-if="[[ slotProps.row.type ]] == 'Query'">
+                    <span v-if="slotProps.review_ids.includes(slotProps.row.id)" class="badge badge-primary">
+                        Quote submitted
+                    </span>
+                    <span v-else>
+                        <form method="post"
+                              :action="`/request/{{ request_id }}/get_quote/${[[ slotProps.row.id ]]}`">{% csrf_token %}
+                            <input name="review_id" hidden :value="`${[[slotProps.row.id]]}`">
+                            <input class="btn btn-primary btn-info-custom" type="submit" value="Get quote">
+                        </form>
+                    </span>
+
+                </span>
+                <span v-else>
+                    <span class="badge badge-success" v-if="slotProps.order_review_ids.includes(slotProps.row.id)">
+                        Order submitted
+                    </span>
+                    <span v-else>
+                        <a class="btn btn-primary"
+                           :href="`/request/{{ request_id }}/order_now/${[[slotProps.row.id]]}`"
+                        >
+                            Order Now</a>
+                    </span>
+                </span>
+            </template>
+        </dynamic-table>
+    </div>
+{% endblock content %}
+
+{% if messages %}
+    {% for message in messages %}
+        {% if message.extra_tags == 'error' %}
+            <script>
+                Toast.fire({
+                    text: '{{message}}',
+                    icon: "error",
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}

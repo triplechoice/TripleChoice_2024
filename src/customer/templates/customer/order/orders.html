@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+    <div id="app">
+        {% csrf_token %}
+        <dynamic-table
+                url='/user/api/customer-order/'
+                has-actions="true"
+                table-name="Order List"
+        >
+            <template slot="actions" slot-scope="slotProps">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item btn btn-info" :href="`/order-details/${[[slotProps.row.id]]}`">
+                            Details
+                        </a></li>
+                        <li><a class="dropdown-item btn btn-danger"  onclick='return confirm("Are you sure you want to do this?")' :href="`/order/delete/${[[slotProps.row.id]]}`" :class="[[slotProps.row.status != 'Received' && slotProps.row.status != 'Processing' ? 'disabled' : '']]">
+                            Delete
+                        </a></li>
+                    </ul>
+                </div>
+            </template>
+        </dynamic-table>
+    </div>
+{% endblock content %}

@@ -1,0 +1,101 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block meta_value %}
+    <meta http-equiv="X-UA-Compatible" content="login">{% endblock %}
+{% block title %}<title>Sign In</title>
+    <link rel="icon" href="{% static '/assets/fav.png' %}" type="image/x-icon"/>{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center h-80vh">
+
+            <div class="col-xl-10 col-lg-12 col-md-9">
+
+                <div class="card o-hidden border-0 shadow-lg my-5">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="justify-content-center row">
+                            <div class="col-12 col-sm-6">
+                                <div class="p-4 p-sm-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Welcome to Triple Choice</h1>
+                                    </div>
+                                    <form class="user" method="post" novalidate>
+                                        {% csrf_token %}
+                                        <input type="hidden" name="url" value="{{ url }}">
+                                        <div class="mb-3">
+                                            {{ form.username }}
+                                            {% if messages %}
+                                                {% for message in messages %}
+
+                                                    {% if message.message == 'User not found' %}
+                                                        <p class="text-center text-danger">{{ message }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-3">
+                                            {{ form.password }}
+                                            {% if messages %}
+                                                {% for message in messages %}
+                                                    {% if message.message == 'Credential not match' %}
+                                                        <p class="text-center text-danger">{{ message }}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <button class="btn btn-primary btn-user btn-block" type="submit">Sign in
+                                        </button>
+                                        {% if messages %}
+                                            {% for message in messages %}
+                                                {% if 'account' in message.message %}
+                                                    <p class="text-center text-danger">{{ message }}</p>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+
+                                    </form>
+                                    <a href="{% url 'authentication:password_reset' %}" class="d-block mt-3 text-right">Forget
+                                        Password?</a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="{% static 'dist/js/app.js' %}"></script>
+    <script src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+                <script>
+                    Toast.fire({
+                        title: '{{message}}',
+                        icon: 'success'
+                    });
+                </script>
+            {% elif message.extra_tags == 'error' %}
+                <script>
+                    Toast.fire({
+                        text: '{{message}}',
+                        icon: "error",
+                    });
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

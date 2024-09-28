@@ -1,0 +1,96 @@
+{#{% extends 'dashboard/base.html' %}#}
+{#{% load static %}#}
+{##}
+{#{% block content %}#}
+{#<div class="card shadow mb-4">#}
+{#    <div class="card-header py-3">#}
+{#        <h6 class="m-0 font-weight-bold text-primary">{{ title }}</h6>#}
+{#    </div>#}
+{#    <div class="card-body">#}
+{#        <div class="table-responsive">#}
+{#            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">#}
+{#                <thead>#}
+{#                <tr>#}
+{#                    <th>Request id</th>#}
+{#                    <th>Part</th>#}
+{#                    <th>Quantity</th>#}
+{#                    <th> Update Date</th>#}
+{#                    <th>Details</th>#}
+{#                </tr>#}
+{#                </thead>#}
+{#                <tbody>#}
+{##}
+{##}
+{#                {% for request in requests %}#}
+{##}
+{#                <tr>#}
+{#                    <td>{{ request.order_id }}-m{{ request.modified_number }}</td>#}
+{#                    <td>{{ request.part }}</td>#}
+{#                    <td>{{ request.quantity }}</td>#}
+{#                    <td>{{ request.updated_at|date:"d/m/Y"  }}</td>#}
+{#                    <td>#}
+{##}
+{##}
+{#                        <a href="{% url 'customer:customer_request_history_details' id=request.id %}"#}
+{#                           class="btn btn-info" title="Details"> <i#}
+{#                                class="fas fa-eye "></i> </a>#}
+{##}
+{##}
+{#                    </td>#}
+{#                </tr>#}
+{#                {% endfor %}#}
+{##}
+{#                </tbody>#}
+{#            </table>#}
+{##}
+{#            {% if requests.has_other_pages %}#}
+{#            <nav aria-label="Page navigation example">#}
+{#                <ul class="pagination">#}
+{#                    {% if requests.has_previous %}#}
+{#                    <li class="page-item"><a class="page-link"#}
+{#                                             href="?page={{ requests.previous_page_number }}">&laquo;</a></li>#}
+{#                    {% else %}#}
+{#                    <li class="disabled page-item"><span class="page-link">&laquo;</span></li>#}
+{#                    {% endif %}#}
+{#                    {% for i in requests.paginator.page_range %}#}
+{#                    {% if requests.number == i %}#}
+{#                    <li class="active page-item"><span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>#}
+{#                    </li>#}
+{#                    {% else %}#}
+{#                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>#}
+{#                    {% endif %}#}
+{#                    {% endfor %}#}
+{#                    {% if requests.has_next %}#}
+{#                    <li class="page-item"><a class="page-link" href="?page={{ requests.next_page_number }}">&raquo;</a>#}
+{#                    </li>#}
+{#                    {% else %}#}
+{#                    <li class="disabled page-item"><span class="page-link">&raquo;</span></li>#}
+{#                    {% endif %}#}
+{#                </ul>#}
+{#            </nav>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock content %}#}
+
+
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+    <div id="app">
+        {% csrf_token %}
+        <dynamic-table url='/user/api/customer-request-history?order_id={{ order_id }}' has-actions="true"
+                       has-param="true" table-name="Request History List">
+            <template slot="actions" slot-scope="slotProps">
+                <a :href="`/user/request-history-details/${[[slotProps.row.id]]}`"
+                   class="btn btn-info" title="Details">
+                    <i class="fas fa-eye "></i>
+                </a>
+            </template>
+        </dynamic-table>
+    </div>
+{% endblock content %}

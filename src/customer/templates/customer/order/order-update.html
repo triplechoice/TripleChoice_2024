@@ -1,0 +1,11 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div id="app">
+            {% csrf_token %}
+            <order-update user_id="{{ user_id }}" order_id="{{ order_id }}"></order-update>
+        </div>
+    </div>
+
+{% endblock content %}

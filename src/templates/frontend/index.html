@@ -1,0 +1,16 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block content %}
+{% csrf_token %}
+{#<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">#}
+
+<div class="container">
+    <div id="app" class="custom-height-body d-flex flex-column justify-content-between">
+        <home-page></home-page>
+        <main-slider></main-slider>
+    </div>
+</div>
+<script type="text/javascript" src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+<script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <strong>Request No : </strong> {{ order.order_id }}
+
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Request Info</li>
+                                <li class="list-group-item"><span class="fw-bold">Quantity :</span> <span
+                                        class="">{{ order.quantity }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Type :</span> <span
+                                        class="">{{ order.get_type_display }}</span></li>
+                               <li class="list-group-item"><span class="fw-bold">Order status :</span> <span
+                                        class="">{{ order.get_moderator_status_display }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Comment :</span> <br>
+                                    <p class="">{{ order.comment }}</p>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
+                <div class="card-header bg-info text-white">
+                    Part Details : <strong
+                        class="text-white bg-danger bg-gradient badge "> {{ order.answer.title }} </strong>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        {% for partclassification_set in order.answer.partclassification_set %}
+                            <div class="col-md-6 col-xs-12 mt-2">
+                                <div class="card">
+                                    <div class="card-header bg-primary text-white">
+                                        {{ partclassification_set.classification.title }}
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group">
+                                            {% for partclassificationattribute_set in partclassification_set.partclassificationattribute_set %}
+                                                <li class="list-group-item"><span
+                                                        class="fw-bold">{{ partclassificationattribute_set.attribute.title }} :</span>
+                                                    <span class="float-end">
+                                                        {{ partclassificationattribute_set.attribute.value }}
+                                                        {% if partclassificationattribute_set.attribute.unit_value %}
+                                                            {% for unit in partclassificationattribute_set.attribute.unit %}
+                                                                {% if unit.id == partclassificationattribute_set.attribute.unit_value %}
+                                                                    <strong class="text-white bg-danger bg-gradient badge ">{{ unit.title }} </strong>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    </span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock content %}

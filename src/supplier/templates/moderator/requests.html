@@ -1,0 +1,28 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+    <div id="app">
+        {% csrf_token %}
+        <dynamic-table url='/supplier/api/moderator-requests' has-actions="true">
+            <template slot="actions" slot-scope="slotProps">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item btn btn-info" :href="`/supplier/moderator/request-details/${[[slotProps.row.order_id]]}`">
+                            Details
+                        </a></li>
+                        <li><a class="dropdown-item btn btn-warning" :href="`/supplier/moderator-request/${[[slotProps.row.id]]}/review`">
+                            Review list
+                        </a></li>
+                    </ul>
+                </div>
+            </template>
+        </dynamic-table>
+
+    </div>
+{% endblock content %}

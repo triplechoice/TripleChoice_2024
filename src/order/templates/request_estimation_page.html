@@ -1,0 +1,54 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% block content %}
+    {% block content_subtitle %}{% endblock %}
+    <link href="{% static 'dist/css/app.css' %}" rel="stylesheet">
+    <link href="{% static 'dist/css/chunk-vendors.css' %}" rel="stylesheet">
+    <div class="row">
+        <div class="container">
+            <div><a href="/super-admin/order/request/" class="btn btn-primary text-white">Back</a></div>
+            <div>
+                <form method="post" action="{% url 'order:request.estimation' request_obj.id %}">
+                    {% csrf_token %}
+                    <div class="row mt-2">
+                        <div class="col-1">
+                            Part title
+                        </div>
+                        <div class="col-3">
+                            {{ request_obj.part.title }}
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-1">
+                            Quantity
+                        </div>
+                        <div class="col-3">
+                            {{ form.quantity }}
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-1">
+                            Lead Time
+                        </div>
+                        <div class="col-3">
+                            {{ form.lead_time }}
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-1">
+                            Cost
+                        </div>
+                        <div class="col-3">
+                            {{ form.cost }}
+                        </div>
+                    </div>
+                    <input type="submit" value="Send" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{% static 'dist/js/app.js' %}"></script>
+    <script src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+{% endblock %}

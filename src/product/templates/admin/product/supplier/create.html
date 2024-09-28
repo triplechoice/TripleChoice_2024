@@ -1,0 +1,14 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+{% block content %}
+    {% csrf_token %}
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+
+    <link rel="stylesheet" href="{% static 'dist/css/app.css' %}">
+    <div id="app">
+        <supplier :user_id="{{ user_id }}" :part_id="{{ part_id }}" ></supplier>
+    </div>
+    <script type="text/javascript" src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/js/app.js' %}"></script>
+{% endblock %}

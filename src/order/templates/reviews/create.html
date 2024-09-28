@@ -1,0 +1,239 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+    <script type="text/javascript" src="js/script.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+    <style>
+        #files-area {
+            width: 50%;
+        {#display: flex;#}{#flex-wrap: wrap;#} margin: 0 auto;
+        }
+
+        .file-block {
+            border-radius: 10px;
+            background-color: rgba(144, 163, 203, 0.2);
+            margin: 5px;
+            color: initial;
+            display: flex;
+            justify-content: space-between;
+
+        }
+
+        #files-names {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .file-delete {
+            display: inline-flex;
+            width: 24px;
+            color: initial;
+            background-color: #6eb4ff00;
+            font-size: large;
+            justify-content: center;
+            margin-right: 3px;
+            cursor: pointer;
+
+
+        }
+
+        .file-delete:hover {
+            background-color: rgba(144, 163, 203, 0.2);
+            border-radius: 10px;
+        }
+
+        .imageUploadArea {
+            display: flex;
+            width: 100%;
+
+        }
+
+        .chooseFileButton {
+            border: 1px dashed #000;
+            border-radius: 10px;
+            height: 200px;
+            width: 50%;
+            background-color: #ebedf6;
+        }
+
+        .chooseFileButton {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #files-names {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+
+            const dt = new DataTransfer(); // Permet de manipuler les fichiers de l'input file
+            $("#attachment").on('change', function (e) {
+                for (var i = 0; i < this.files.length; i++) {
+                    let fileBloc = $('<span/>', {class: 'file-block'}),
+                        fileName = $('<span/>', {class: 'name', text: this.files.item(i).name});
+                    fileBloc.append(fileName).append('<span class="file-delete "><span style="font-size: 12px" ">&#10060;</span></span>');
+                    $("#filesList > #files-names").append(fileBloc);
+                }
+                ;
+
+                for (let file of this.files) {
+                    dt.items.add(file);
+                }
+                this.files = dt.files;
+                $('span.file-delete').click(function () {
+                    let name = $(this).next('span.name').text();
+                    // Supprimer l'affichage du nom de fichier
+                    $(this).parent().remove();
+                    for (let i = 0; i < dt.items.length; i++) {
+
+                        if (name === dt.items[i].getAsFile().name) {
+
+                            dt.items.remove(i);
+                            continue;
+                        }
+                    }
+
+                    document.getElementById('attachment').files = dt.files;
+                });
+            });
+
+        });
+
+    </script>
+
+
+
+    <div class="row">
+        <div class="col-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Add Review
+                </div>
+                <div class="card-body">
+                    <form action="" method="POST" enctype="multipart/form-data" class="dropzone">
+                        {% csrf_token %}
+                        {{ form.request.as_hidden }}
+                        {{ form.user.as_hidden }}
+                        <div class="mb-3">
+                            <label class="form-label">Title<span class="text-danger">*</span></label>
+                            {{ form.title }}
+                            <span class="text-danger">{{ form.errors.title }}</span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class=" mt-5">
+                                <div class=" bg-secondary">
+
+                                    <p class=" text-center">
+
+                                        <input type="file" name="attachment" accept=".pdf" id="attachment"
+                                               style="visibility: hidden; position: absolute;" multiple/>
+                                        {#                                    <input type="file" name="attachment"/>#}
+                                    </p>
+                                </div>
+
+                                <div class="imageUploadArea">
+                                    <div class="chooseFileButton">
+                                        <label for="attachment">
+                                            <a class="btn btn-primary text-light" role="button" aria-disabled="false">
+
+                                                <i class="fas fa-file"></i> Add Files {% if view != "edit" %}
+                                                <span class="text-danger">*</span>
+                                            {% endif %}
+                                            </a>
+                                        </label>
+                                    </div>
+                                    <p id="files-area">
+                                        <span id="filesList">
+                                            <span class="d-inline-flex" id="files-names"></span>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <span class="text-danger">{{ form.errors.attachment }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Note</label>
+                            {{ form.description }}
+                            <span class="text-danger">{{ form.errors.description }}</span>
+                        </div>
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Quantity<span class="text-danger">*</span></label>
+                            {{ form.quantity }}
+                            <span class="text-danger">{{ form.errors.description }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start p-0">
+                                    <div class="col-8">
+                                        <label class="form-label">Lead Time<span class="text-danger">*</span></label>
+                                        {{ form.supplier_lead_time }}
+                                        <span class="text-danger">{{ form.errors.supplier_lead_time }}</span>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <label class="form-label">Unit</label>
+                                        {{ form.supplier_unit }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-12 d-flex justify-content-start p-0">
+                                    <div class="col-8">
+                                        <label class="form-label">Cost<span class="text-danger">*</span></label>
+                                        {{ form.supplier_cost }}
+                                        <span class="text-danger">{{ form.errors.supplier_cost }}</span>
+                                    </div>
+
+                                    <div class="col-2">
+                                        <label class="form-label">Cost Unit</label>
+                                        {{ form.supplier_cost_unit }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+                <script>
+                    Toast.fire({
+                        title: '{{message}}',
+                        icon : 'success'
+                    });
+                </script>
+            {% elif message.extra_tags == 'error' %}
+                <script>
+                    Toast.fire({
+                        text: '{{message}}',
+                        icon: "error",
+                    });
+                </script>
+
+
+
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+
+{% endblock %}

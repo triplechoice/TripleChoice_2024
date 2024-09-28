@@ -1,0 +1,15 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block headers %}
+    {% for seo in page.pageseo_set.all %}
+        <meta name="{{ seo.title }}" content="{{ seo.description }}">
+    {% endfor %}
+
+{% endblock %}
+
+{% block content %}
+
+    {{ page.description|safe }}
+{% endblock %}
+

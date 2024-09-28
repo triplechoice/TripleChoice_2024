@@ -1,0 +1,14 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% block content %}
+{% block content_subtitle %}{% endblock %}
+{% csrf_token %}
+<link href="{% static 'dist/css/app.css' %}" rel="stylesheet">
+<link href="{% static 'dist/css/chunk-vendors.css' %}" rel="stylesheet">
+
+<div id="app">
+    <selected-request-review selected_request_id="{{request_id}}" selected_reviews ="{{reviews}}"  ></selected-request-review>
+</div>
+<script src="{% static 'dist/js/app.js' %}"></script>
+<script src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+{% endblock %}

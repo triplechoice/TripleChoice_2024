@@ -1,0 +1,39 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load auth_extras %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="float-end m-2"><a href="/supplier/moderator-requests/" class="btn btn-primary"> Back </a></div>
+        <div class="col-10">
+            <div class="card mb-2">
+                <div class="card-header bg-primary text-white">
+                    <strong>Request No : </strong> {{ request_info.order_id }}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Request Info</li>
+                                <li class="list-group-item"><span class="fw-bold">Part title :</span> <span
+                                        class="">{{ request_info.part.title }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Quantity :</span> <span
+                                        class="">{{ request_info.quantity }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Status :</span> <span
+                                        class="">{{ request_info.get_supplier_status_display }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="app">
+                {% csrf_token %}
+                <dynamic-table url='/api/moderator/review?request_id={{ request_id }}' request-id="{{ request_id }}"
+                               has-param="true" table-name=""
+                               selected-review="true">
+                </dynamic-table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

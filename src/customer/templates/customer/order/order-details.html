@@ -1,0 +1,121 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+{% block content %}
+    {% create_dict "{ 'received': 'badge-primary','processing':'badge-info', 'processed':'badge-warning', 'shipped': 'badge-secondary', 'delivered':'badge-success', 'returned':'badge-danger', 'canceled':'badge-danger' }" as badges %}
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between">
+                    <div>
+                        <strong>Order No : </strong>
+                        {% if order.modified_number > 0 %}{{ order.order_id }}-m{{ order.modified_number }}
+                        {% else %}
+                            {{ order.order_id }}
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'customer:customer_orders' %}" class="btn btn-sm btn-light">Back</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Billing address info</li>
+                                <li class="list-group-item"><span class="fw-bold">First Name :</span> <span
+                                        class="">{{ order.billing_address.first_name }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Last Name :</span> <span
+                                        class="">{% if order.billing_address.last_name %}
+                                    {{ order.billing_address.last_name }}{% endif %}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Email :</span> <span
+                                        class="">{{ order.billing_address.email }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Phone Number :</span> <span
+                                        class="">{{ order.billing_address.phone_no }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Street Number :</span> <span
+                                        class="">{{ order.billing_address.street_no }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Building Number :</span> <span
+                                        class="">{% if order.billing_address.building_no %}
+                                    {{ order.billing_address.building_no }}{% endif %}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">State :</span> <span
+                                        class="">{{ order.billing_address.state }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">City :</span> <span
+                                        class="">{{ order.billing_address.city }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Zip code :</span> <span
+                                        class="">{{ order.billing_address.zip_code }}</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Shipping address info</li>
+                                <li class="list-group-item"><span class="fw-bold">First Name :</span> <span
+                                        class="">{{ order.shipping_address.first_name }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Last Name :</span> <span
+                                        class="">{% if order.shipping_address.last_name %}
+                                    {{ order.shipping_address.last_name }}{% endif %}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Email :</span> <span
+                                        class="">{{ order.shipping_address.email }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Phone Number :</span> <span
+                                        class="">{{ order.shipping_address.phone_no }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Street Number :</span> <span
+                                        class="">{{ order.shipping_address.street_no }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Building Number :</span> <span
+                                        class="">{% if order.shipping_address.building_no %}
+                                    {{ order.shipping_address.building_no }}{% endif %}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">State :</span> <span
+                                        class="">{{ order.shipping_address.state }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">City :</span> <span
+                                        class="">{{ order.shipping_address.city }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Zip code :</span> <span
+                                        class="">{{ order.shipping_address.zip_code }}</span></li>
+                            </ul>
+                        </div>
+                        <div class="col-6">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Order info</li>
+                                <li class="list-group-item"><span class="fw-bold">Order id :</span> <span
+                                        class="">{{ order.order_id }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Subtotal :</span> <span
+                                        class="">{{ order.subtotal }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Tax :</span> <span
+                                        class="">{{ order.tax }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Total :</span> <span
+                                        class="">{{ order.total }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Payment Method :</span> <span
+                                        class="badge bg-primary">{{ order.get_payment_method_display }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Building Number :</span> <span
+                                        class="">{% if order.shipping_address.building_no %}
+                                    {{ order.shipping_address.building_no }}{% endif %}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Quantity :</span> <span
+                                        class="">{{ order.quantity }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Status :</span> <span
+                                        class="badge {{ badges|get_dict_item:order.status }}">{{ order.get_status_display }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        {#                        review details#}
+                        <div class="col-6">
+                            <ul class="list-group mt-2">
+                                <li class="list-group-item bg-primary text-white">Review Info</li>
+                                <li class="list-group-item"><span class="fw-bold">Reviewed By :</span> <span
+                                        class="">{{ order.review.user.firstname }} {{ order.review.user.last_name }}</span>
+                                </li>
+                                <li class="list-group-item"><span class="fw-bold">Title :</span> <span
+                                        class="">{{ order.review.title }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Description :</span> <span
+                                        class="">{{ order.review.description }}</span></li>
+                                <li class="list-group-item"><span class="fw-bold">Lead time :</span> <span
+                                        class="">{{ order.review.lead_time }} {{ order.review.get_unit_display }}</span>
+                                </li>
+                                <li class="list-group-item"><span class="fw-bold">Cost :</span> <span
+                                        class="">{{ order.review.cost }} {{ order.review.get_cost_unit_display }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

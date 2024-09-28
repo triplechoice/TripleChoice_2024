@@ -1,0 +1,183 @@
+#home-section {
+   height : 50%;
+
+   .main-search {
+      max-width     : 582px;
+      margin        : 0 auto;
+      border-radius : 30px;
+
+      .position-absolute {
+         z-index     : 99;
+         line-height : 44px;
+      }
+
+      .left {
+         left : 20px;
+         top  : 0;
+      }
+
+      .multiselect__tags {
+         min-height    : 44px;
+         border-radius : 30px;
+      }
+
+      .multiselect--active {
+         .multiselect__tags {
+            border-radius : 30px 30px 0 0;
+         }
+      }
+
+      .multiselect__select {
+         right : 10px;
+         top   : 2px;
+      }
+
+      .multiselect__input, .multiselect__single {
+         padding    : 0 0 0 50px;
+         margin-top : 5px;
+      }
+
+      .multiselect--above .multiselect__content-wrapper {
+         padding-left : 50px;
+      }
+   }
+
+   .search-item {
+      text-decoration  : none;
+      background-color : #f8f9fa;
+      border           : 1px solid #f8f9fa;
+      border-radius    : 4px;
+      color            : #3c4043;
+      font-size        : 14px;
+      margin           : 11px 4px;
+      padding          : 0 16px;
+      line-height      : 27px;
+      height           : 36px;
+      min-width        : 54px;
+      text-align       : center;
+      cursor           : pointer;
+      align-items      : center;
+      justify-content  : center;
+      display          : flex;
+
+      &:hover {
+         box-shadow       : 0 1px 1px #0000001a;
+         background-color : #f8f9fa;
+         border           : 1px solid #dadce0;
+         color            : #202124;
+      }
+   }
+}
+
+.multiselect__option--highlight {
+   background : $primary !important;
+
+   &:after {
+      background : $primary !important;
+   }
+}
+
+.featured-parts-section {
+   //margin-bottom : 40px;
+   //width : 100%;
+
+   .title {
+      margin    : 50px 0 20px;
+      font-size : 24px;
+      @include media-breakpoint-down(sm) {
+         margin : 50px 0;
+      }
+   }
+
+   .item p {
+      font-size   : 16px;
+      font-weight : 600;
+      margin-top  : 15px;
+   }
+
+   .owl-item {
+      .item {
+         width  : 210px;
+         margin : 0 auto;
+      }
+   }
+
+   .owl-theme .owl-dots .owl-dot.active span,
+   .owl-theme .owl-dots .owl-dot:hover span {
+      background : $secondary;
+
+      &:after {
+         border : 1px solid $secondary;
+      }
+   }
+
+   .owl-theme .owl-dots .owl-dot span {
+      background : $primary;
+      width      : 10px;
+      height     : 10px;
+      position   : relative;
+
+      &:after {
+         content       : '';
+         position      : absolute;
+         width         : 16px;
+         height        : 16px;
+         border        : 1px solid transparent;
+         border-radius : 50%;
+         left          : -3px;
+         top           : -3px;
+      }
+   }
+}
+
+.installer-wizard {
+   min-height : 59vh;
+}
+
+.h-80vh {
+   min-height : 73vh;
+}
+
+#main-body {
+   padding-bottom : 46px;
+   @include media-breakpoint-down(sm) {
+      padding-bottom : 180px;
+   }
+}
+
+.custom-height-body {
+   display         : flex;
+   flex-direction  : column;
+   justify-content : center;
+   position        : relative;
+}
+
+.form-control {
+   //box-shadow : inset 1px 2px 4px 2px #e3e3e3;
+}
+
+.multiselect__tags:hover {
+   box-shadow : 0 0.5rem 1rem #00000026 !important;
+}
+
+.main-header {
+   padding-top : 10px;
+
+   .nav-link {
+      padding : 0 7px;
+
+      &:hover {
+         color           : #000;
+         text-decoration : underline;
+      }
+   }
+}
+
+.bg-gradient-primary {
+   a.nav-link.link-clicked,
+   a.nav-link:hover,
+   {
+      color      : #000 !important;
+      background : $secondary !important;
+   }
+}

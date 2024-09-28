@@ -1,0 +1,128 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load order_custom_template_tag %}
+{% load auth_extras %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <form method="post" enctype="multipart/form-data" action="{% url 'authentication:user_profile' %}">
+                {% csrf_token %}
+                <input hidden name="user" value={{ request.user.id }}>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="text-center border-bottom h3 py-2">
+                                Profile
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>First Name:</b> {{ user_form.first_name }}</li>
+                                        <li class="list-group-item"><b>Last Name:</b> {{ user_form.last_name }}</li>
+                                        <li class="list-group-item"><b>Company Name:</b> {{ user_form.company_name }}
+                                        </li>
+                                        <li class="list-group-item"><b>Phone:</b> {{ user_form.phone }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="my-4 text-center border-bottom" style="max-width: 150px; margin: 0 auto">
+
+                                {% if profile.file %}
+                                    <img src='{{ profile.file.url }}' class="card-img-top w-50 text-center"
+                                         alt="...">
+                                {% else %}
+                                    <img src="{% static '/assets/user_avater.png' %}"
+                                         class="card-img-top img-fluid text-center"
+                                         alt="...">
+                                {% endif %}
+                                {#                                {{ user_profile_form.file }}#}
+                                <input type="file" name="file" accept="image/*" class="form-control mt-3">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="text-center h3 border-bottom py-2">
+                                Billing Address
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><b>Street</b> {{ user_profile_form.billing_street }}
+                                        </li>
+                                        <li class="list-group-item"><b>Building
+                                            No</b> {{ user_profile_form.billing_building }}
+                                        </li>
+                                        <li class="list-group-item"><b>State</b> {{ user_profile_form.billing_state }}
+                                        </li>
+                                        <li class="list-group-item"><b>City</b> {{ user_profile_form.billing_city }}
+                                        </li>
+                                        <li class="list-group-item"><b>Zip
+                                            code</b> {{ user_profile_form.billing_zip_code }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="text-center h3 border-bottom py-2">
+                                Shipping Address
+                            </div>
+                            <div class="card-body">
+                                <div class="card">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <b>Street</b> {{ user_profile_form.shipping_street }}</li>
+                                        <li class="list-group-item"><b>Building
+                                            No</b> {{ user_profile_form.shipping_building }}
+                                        </li>
+                                        <li class="list-group-item"><b>State</b> {{ user_profile_form.shipping_state }}
+                                        </li>
+                                        <li class="list-group-item"><b>City</b> {{ user_profile_form.shipping_city }}
+                                        </li>
+                                        <li class="list-group-item"><b>Zip
+                                            code</b> {{ user_profile_form.shipping_zip_code }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mb-3">
+                        <input type="submit" value="save" class="btn w-10 btn-primary">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <script src="{% static 'dist/js/app.js' %}"></script>
+    <script src="{% static 'dist/js/chunk-vendors.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js" crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.extra_tags == 'success' %}
+                <script>
+                    Toast.fire({
+                        title: '{{message}}',
+                        icon: 'success'
+                    });
+                </script>
+            {% elif message.extra_tags == 'error' %}
+                <script>
+                    Toast.fire({
+                        text: '{{message}}',
+                        icon: "error",
+                    });
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock content %}
