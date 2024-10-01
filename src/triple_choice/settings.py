@@ -17,12 +17,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure--q_8buj7+%g4l-fqc94mmd8@mcaz)71iw3usd22wnr-_icphl0'
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True  # Set this to True for development mode
+
 APP_SITE_HEADER = os.environ.get('APP_SITE_HEADER', 'TripleChoice')
 APP_SITE_TITLE = os.environ.get('APP_SITE_TITLE', 'TripeChoice Admin Portal')
 APP_INDEX_TITLE = os.environ.get('APP_INDEX_TITLE', 'Welcome to TripeChoice Admin Portal')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', "False").lower() in ('true', 1, 't')
+#DEBUG = os.environ.get('DEBUG', "False").lower() in ('true', 1, 't')
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(' ')
 
