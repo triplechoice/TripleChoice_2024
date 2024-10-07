@@ -67,9 +67,6 @@ class RequestView(ListAPIView, CreateAPIView, UpdateAPIView):
         return self.update(request, *args, **kwargs)
 
 
-
-
-
 # Create a local DynamoDB resource
 dynamodb = boto3.resource(
     'dynamodb',
