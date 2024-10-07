@@ -3,8 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from order.apis.order import (
     RequestView, CheckDisposableEmail, RequestPartView, RequestDeleteView,
-    ApiRequestReviewView, ApiRequestReviewCreateView, OrderView, OrderDeleteView, 
-    GetOrderView, StripCheck
+    ApiRequestReviewView, ApiRequestReviewCreateView, OrderView, OrderDeleteView,
+    GetOrderView, StripCheck, PumpDataView, OrderPumpMatchView, PumpMatchInputAPIView
 )
 from order.apis.request import (
     GetReviewIds, GetSelectedReview, SetSelectedReview, GetReviewIdInOrderInfo
@@ -39,6 +39,9 @@ urlpatterns = [
     path('request/<int:pk>/order_now/<int:review_id>', RequestOrderView.as_view(), name='request_order'),
 
     # API endpoints
+    # path('api/pump-data/', PumpDataView.as_view(), name='pump-data'),
+    path('api/pump-match-input/', PumpMatchInputAPIView.as_view(), name='pump-match'),
+    path('api/pump-data/', OrderPumpMatchView.as_view(), name='pump-data'),
     path('api/get_request/<int:pk>', GetRequestInfo.as_view(), name='get_request_info'),
     path('api/get_review/<int:pk>', GetReviewInfo.as_view(), name='get_review_info'),
     path('api/request/', RequestView.as_view()),

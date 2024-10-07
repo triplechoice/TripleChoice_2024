@@ -13,7 +13,7 @@
         Next
       </button>
       <button v-else class="btn px-4 btn-primary" @click="submitPartForm">
-        Submit
+        Search
       </button>
     </div>
     <!-- Button trigger modal -->

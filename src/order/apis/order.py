@@ -1,6 +1,8 @@
 import json
 import os
+import subprocess
 
+import boto3
 import stripe
 from django.conf import settings
 from django.contrib import messages
@@ -17,7 +19,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.views import APIView
 from rest_framework import status
 from urllib3.util import url
-
+from .extractor import fetch_latest_order
 from authentication.mixins import PermissionMixin
 from order.forms.review_form import RequestReviewForm
 from order.models.request import Request, RequestReview, SelectedRequestReview
@@ -53,6 +55,7 @@ class RequestView(ListAPIView, CreateAPIView, UpdateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def post(self, request, *args, **kwargs):
+        print("*"*100)
         return self.create(request, *args, **kwargs)
 
     def put(self, request, *args, **kwargs):
@@ -62,6 +65,206 @@ class RequestView(ListAPIView, CreateAPIView, UpdateAPIView):
             raise PermissionDenied("this in not logged in users order")
 
         return self.update(request, *args, **kwargs)
+
+
+
+
+
+# Create a local DynamoDB resource
+dynamodb = boto3.resource(
+    'dynamodb',
+    region_name='us-west-2',
+    endpoint_url='http://localhost:8001',  # Adjust if you're using an actual AWS instance
+    aws_access_key_id="anything",  # Replace with actual key if on AWS
+    aws_secret_access_key="anything"  # Replace with actual secret if on AWS
+)
+
+# Define the table name
+table_name = 'YourTableName'  # Replace with your actual table name
+table = dynamodb.Table(table_name)
+
+# Function to get pump data from DynamoDB
+def get_pump_data():
+    response = table.scan()
+    return response['Items']
+
+# Function to predict head based on flow rate using the pump curve
+def predict_head(flow_rate, pump_curve):
+    # Calculate predicted head using polynomial coefficients
+    predicted_head = sum(coef * (flow_rate ** i) for i, coef in enumerate(reversed(pump_curve)))
+    return predicted_head
+
+class PumpDataView(APIView):
+    def get(self, request):
+        try:
+            # Parse the input parameters from the request query params
+            input_flow_rate = float(request.query_params.get('input_flow_rate', 0))
+            head_input = float(request.query_params.get('head_input', 0))
+
+            # Fetch pump data from DynamoDB
+            pump_data_list = get_pump_data()
+
+            # Prepare a list for results
+            results = []
+
+            # Check for all pumps
+            for pump_data in pump_data_list:
+                pump_name = pump_data['Name']
+                pump_curve = [float(coef) for coef in pump_data['PumpCurve']]  # Convert to float for calculation
+
+                # Predict the head using the input flow rate
+                head_predicted = predict_head(input_flow_rate, pump_curve)
+
+                # Determine if it's a matching pump
+                is_match = head_input < head_predicted < head_input * 1.25
+                match_status = "Match" if is_match else "No Match"
+
+                # Append the results
+                results.append({
+                    'Pump Name': pump_name,
+                    'Input Flow Rate (GPM)': input_flow_rate,
+                    'Input Head (ft)': head_input,
+                    'Predicted Head (ft)': head_predicted,
+                    'Match Pump': match_status
+                })
+
+            # Return the results as JSON
+            print("This is results: ", results)
+            return Response(results, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PumpMatchInputAPIView(APIView):
+    def post(self, request):
+        # Get the values from the request data
+        input_flow_rate = request.data.get('input_flow_rate')
+        head_input = request.data.get('head_input')
+
+        if input_flow_rate is None or head_input is None:
+            return Response({"error": "Both 'input_flow_rate' and 'head_input' are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Convert to float
+            input_flow_rate = float(input_flow_rate)
+            head_input = float(head_input)
+
+            return Response({"input_flow_rate": input_flow_rate, "head_input": head_input})
+        except ValueError:
+            return Response({"error": "Invalid input. 'input_flow_rate' and 'head_input' must be numbers."}, status=status.HTTP_400_BAD_REQUEST)
+
+class OrderPumpMatchView(APIView):
+    def post(self, request, *args, **kwargs):
+        # Parse the input parameters from the request query params
+        input_flow_rate = request.data.get('input_flow_rate')
+        head_input = request.data.get('head_input')
+        # input_flow_rate = input_flow_rate
+        # head_input = head_input
+
+        # Fetch pump data from DynamoDB
+        pump_data_list = get_pump_data()
+
+        # Prepare a list for results
+        results = []
+
+        # Check for all pumps
+        for pump_data in pump_data_list:
+            pump_name = pump_data['Name']
+            pump_curve = [float(coef) for coef in
+                          pump_data['PumpCurve']]  # Convert to float for calculation
+
+            # Predict the head using the input flow rate
+            head_predicted = predict_head(input_flow_rate, pump_curve)
+
+            # Determine if it's a matching pump
+            is_match = head_input < head_predicted < head_input * 1.25
+            match_status = "Match" if is_match else "No Match"
+
+            # Append the results
+            results.append({
+                'Pump Name': pump_name,
+                'Input Flow Rate (GPM)': input_flow_rate,
+                'Input Head (ft)': head_input,
+                'Predicted Head (ft)': head_predicted,
+                'Match Pump': match_status
+            })
+
+        # Return the results as JSON
+        print("This is results: ", results)
+        return Response(results, status=status.HTTP_200_OK)
+        # # Fetch the latest order
+        # order_details = fetch_latest_order()
+        # if order_details:
+        #     order_id, quantity, comment, specifications, title, created_at = order_details
+        #
+        #     # Print order details for debugging purposes
+        #     print(f"Order ID: {order_id}, Title: {title}")
+        #
+        #     # Extract flow rate and head input from specifications
+        #     input_flow_rate = None
+        #     head_input = None
+        #     for spec in specifications.get('partclassification_set', []):
+        #         for attr in spec['partclassificationattribute_set']:
+        #             if attr['attribute']['title'] == "Flow":
+        #                 input_flow_rate = float(attr['attribute']['value'])
+        #             if attr['attribute']['title'] == "Head":
+        #                 head_input = float(attr['attribute']['value'])
+        #     # Parse the input parameters from the request query params
+        #     input_flow_rate = input_flow_rate
+        #     head_input = head_input
+        #
+        #     # Fetch pump data from DynamoDB
+        #     pump_data_list = get_pump_data()
+        #
+        #     # Prepare a list for results
+        #     results = []
+        #
+        #     # Check for all pumps
+        #     for pump_data in pump_data_list:
+        #         pump_name = pump_data['Name']
+        #         pump_curve = [float(coef) for coef in
+        #                       pump_data['PumpCurve']]  # Convert to float for calculation
+        #
+        #         # Predict the head using the input flow rate
+        #         head_predicted = predict_head(input_flow_rate, pump_curve)
+        #
+        #         # Determine if it's a matching pump
+        #         is_match = head_input < head_predicted < head_input * 1.25
+        #         match_status = "Match" if is_match else "No Match"
+        #
+        #         # Append the results
+        #         results.append({
+        #             'Pump Name': pump_name,
+        #             'Input Flow Rate (GPM)': input_flow_rate,
+        #             'Input Head (ft)': head_input,
+        #             'Predicted Head (ft)': head_predicted,
+        #             'Match Pump': match_status
+        #         })
+        #
+        #     # Return the results as JSON
+        #     print("This is results: ", results)
+        #     return Response(results, status=status.HTTP_200_OK)
+        #
+        # return Response({"error": "No order found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 class CheckDisposableEmail(APIView, DisposableEmail):

@@ -1,12 +1,11 @@
 
-django
+django==3.2.9
 python-dotenv
 djangorestframework
 mysqlclient
 django-userforeignkey
 markdown
 django-filter
-pip
 #install
 django-disposable-email-checker
 django-extensions

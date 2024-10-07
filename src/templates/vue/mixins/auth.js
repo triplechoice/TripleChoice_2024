@@ -44,6 +44,7 @@ export default {
                 data.append("file_comment", "");
             }
 
+            console.log(formData)
             axios({
                 method: "post",
                 url: '/api/request/',
@@ -51,6 +52,7 @@ export default {
                 headers: { "Content-Type": "multipart/form-data" },
               })
                 .then(res => {
+                    console.log(res.data);
                     if (res.data.is_logged_in == "previously_logged_in") {
                         Toast.fire({
                             text: "Request submitted successfully",

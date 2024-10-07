@@ -4,7 +4,9 @@ import numpy as np
 from decimal import Decimal
 
 # Create a local DynamoDB resource with a specified region
-dynamodb = boto3.resource('dynamodb', region_name='us-west-2', endpoint_url='http://localhost:8000')
+# dynamodb = boto3.resource('dynamodb', region_name='us-west-2', endpoint_url='http://localhost:8001')
+dynamodb = boto3.resource('dynamodb', region_name='us-west-2', endpoint_url='http://localhost:8001', aws_access_key_id="anything",
+            aws_secret_access_key="anything")
 
 # Define the table name
 table_name = 'YourTableName'

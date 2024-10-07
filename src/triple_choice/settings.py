@@ -103,9 +103,9 @@ WSGI_APPLICATION = 'triple_choice.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'triple_choice',
+        'NAME': 'triplechoice',
         'USER': 'root',  # Using root user
-        'PASSWORD': 'Pashandi2015$',  # Ensure this is correct
+        'PASSWORD': 'arif101020',  # Ensure this is correct
         'HOST': 'localhost',
         'PORT': '3306',
     }
