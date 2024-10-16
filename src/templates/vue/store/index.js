@@ -5,37 +5,37 @@ import createPersistedState from "vuex-persistedstate";
 const dataState = createPersistedState()
 Vue.use(Vuex)
 
-
 export default new Vuex.Store({
-    plugins  : [dataState],
-    state    : {
-        form             : {
-            username : '',
+    plugins: [dataState],
+    state: {
+        form: {
+            username: '',
             demoEmail: '',
-            message  : ''
+            message: ''
         },
-        isLoggedIn       : false,
+        isLoggedIn: false,
         isRegisterClicked: false,
-        parts            : [],
-        contactForm      : {
-            first_name     : '',
-            last_name      : '',
-            email          : '',
-            phone          : '',
-            companyName    : '',
-            password       : '',
+        parts: [],
+        contactForm: {
+            first_name: '',
+            last_name: '',
+            email: '',
+            phone: '',
+            companyName: '',
+            password: '',
             confirmPassword: '',
-            existUser      : ''
+            existUser: ''
         },
-        commentForm      : {
+        commentForm: {
             comment: '',
             file_comment: '',
         },
-        submitForm       : {
+        submitForm: {
             quantity: '',
             zip_code: '',
-            type    : ''
-        }
+            type: ''
+        },
+        pumpData: {}
     },
     mutations: {
         setParts(state, payload) {
@@ -63,32 +63,35 @@ export default new Vuex.Store({
             state.submitForm = payload
         },
         emptyForm(state) {
-            state.parts       = []
+            state.parts = []
             state.contactForm = {
-                first_name     : '',
-                last_name      : '',
-                email          : '',
-                phone          : '',
-                companyName    : '',
-                password       : '',
+                first_name: '',
+                last_name: '',
+                email: '',
+                phone: '',
+                companyName: '',
+                password: '',
                 confirmPassword: '',
-                existUser      : ''
+                existUser: ''
 
             }
             state.commentForm = {
                 comment: '',
-                file_comment:'',
+                file_comment: '',
             }
-            state.submitForm  = {
+            state.submitForm = {
                 quantity: '',
                 zip_code: '',
-                type    : ''
+                type: ''
             }
-        }
+        },
+        setPumpData(state, payload) {
+            state.pumpData = payload
+        },
     },
-    actions  : {},
-    modules  : {},
-    getters  : {
+    actions: {},
+    modules: {},
+    getters: {
         form(state) {
             return state.form;
         },
@@ -109,6 +112,9 @@ export default new Vuex.Store({
         },
         submitForm(state) {
             return state.submitForm;
+        },
+        pumpData(state) {
+            return state.pumpData;
         }
     }
 })

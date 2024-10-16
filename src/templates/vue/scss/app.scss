@@ -30,11 +30,14 @@ body {
 #header {
    background : darken($primary, 25%);
 }
-
+.matched_data{
+   margin-bottom: -20px;
+}
 .footer {
+   margin-top: 50px;
    background : #f2f2f2;
    min-height : 46px;
-   position   : absolute;
+   //position   : absolute;
    width      : 100%;
    bottom     : 0;
    left       : 0;

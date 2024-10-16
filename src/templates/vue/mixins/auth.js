@@ -3,7 +3,9 @@ import {mapGetters} from 'vuex';
 export default {
     data() {
         return {
-            authData: {}
+            authData: {},
+            flowValue: null,
+            headValue: null
         }
     },
     computed: {
@@ -11,16 +13,16 @@ export default {
             'form', 'parts', 'commentForm', 'contactForm', 'submitForm', 'getIsLoggedIn', 'getIsRegisterClicked'
         ]),
     },
-    methods : {
+    methods: {
         formData() {
             return {
-                "answer"      : this.parts,
-                "comment"     : this.commentForm.comment,
+                "answer": this.parts,
+                "comment": this.commentForm.comment,
                 "contact_info": this.contactForm,
-                "quantity"    : this.submitForm.quantity,
-                "type"        : this.submitForm.type,
-                "zip_code"    : this.submitForm.zip_code,
-                "part"        : this.parts.id
+                "quantity": this.submitForm.quantity,
+                "type": this.submitForm.type,
+                "zip_code": this.submitForm.zip_code,
+                "part": this.parts.id
             }
         },
         async checkAuth() {
@@ -34,7 +36,7 @@ export default {
                     }
                 })
         },
-        async requestSubmitHelper(file=false) {
+        async requestSubmitHelper(file = false) {
             let formData = {form_data: JSON.stringify(this.formData())};
             let data = this.jsonToFormData(formData);
 
@@ -44,45 +46,69 @@ export default {
                 data.append("file_comment", "");
             }
 
-            console.log(formData)
+            // Get the Flow and Head value
+            const classifications = this.$store.state.parts.partclassification_set;
+
+            classifications.forEach((classification) => {
+                classification.partclassificationattribute_set.forEach((attribute) => {
+                    if (attribute.attribute.title === "Flow") {
+                        this.flowValue = attribute.attribute.value;
+                    }
+                    if (attribute.attribute.title === "Head") {
+                        this.headValue = attribute.attribute.value;
+                    }
+                });
+            });
+
+            // console.log(this.flowValue, this.headValue)
             axios({
                 method: "post",
                 url: '/api/request/',
                 data: data,
-                headers: { "Content-Type": "multipart/form-data" },
-              })
+                headers: {"Content-Type": "multipart/form-data"},
+            })
                 .then(res => {
-                    console.log(res.data);
-                    if (res.data.is_logged_in == "previously_logged_in") {
-                        Toast.fire({
-                            text: "Request submitted successfully",
-                            icon: "success",
-                        }).then(value => {
-                                window.location.href = '/user/requests/?template=request-detaials'
-                            }
-                        );
-                    } else if (res.data.is_logged_in === "user_already_exists") {
-                        Toast.fire({
-                            text: "Request submitted successfully",
-                            icon: "success",
-                        }).then(value => {
-                                window.location.href = '/'
-                            }
-                        );
-                    } else if (res.data.is_logged_in === 'wrong_password_given') {
-                        Toast.fire({
-                            text: "User already exists, But wrong password given",
-                            icon: "error",
-                        })
+                    // console.log(res.data);
+                    if (this.flowValue && this.headValue) {
+                        axios.post('/api/pump-data/', {
+                            input_flow_rate: +this.flowValue,
+                            head_input: +this.headValue
+                        }).then(res => {
+                            this.$store.commit('setPumpData', res.data)
+                            console.log(res.data);
+                        });
                     } else {
-                        let text = "order submitted please check your  email for account activation"
-                        Toast.fire({
-                            text: text,
-                            icon: "success",
-                        }).then(value => {
-                                window.location.href = '/'
-                            }
-                        );
+                        if (res.data.is_logged_in == "previously_logged_in") {
+                            Toast.fire({
+                                text: "Request submitted successfully",
+                                icon: "success",
+                            }).then(value => {
+                                    window.location.href = '/user/requests/?template=request-detaials'
+                                }
+                            );
+                        } else if (res.data.is_logged_in === "user_already_exists") {
+                            Toast.fire({
+                                text: "Request submitted successfully",
+                                icon: "success",
+                            }).then(value => {
+                                    window.location.href = '/'
+                                }
+                            );
+                        } else if (res.data.is_logged_in === 'wrong_password_given') {
+                            Toast.fire({
+                                text: "User already exists, But wrong password given",
+                                icon: "error",
+                            })
+                        } else {
+                            let text = "order submitted please check your  email for account activation"
+                            Toast.fire({
+                                text: text,
+                                icon: "success",
+                            }).then(value => {
+                                    window.location.href = '/'
+                                }
+                            );
+                        }
                     }
                 })
                 .catch(err => {
@@ -94,7 +120,6 @@ export default {
 
                 })
         },
-
 
 
         buildFormData(formData, data, parentKey) {
